@@ -10,7 +10,11 @@ public class AsciiMap {
     private CoordinatePair current;
 
     /**
-     * Make constructor private to force clients to use {@link AsciiMapBuilder#build(String)}
+     * Make constructor default to force clients to use {@link AsciiMapBuilder#build(String)}
+     * <p>
+     * <b>Note:</b> It is assumed that clients set up proper values for all parameters.
+     * I.e. if {@code matrixHeight} and/or {@code matrixWidth} aren't compatible with real lengths from
+     * {@code asciiMatrix}, there is no guarantee that subsequent usages of this class will function correctly.
      */
     AsciiMap(int matrixHeight, int matrixWidth, char[][] asciiMatrix) {
         this.matrixHeight = matrixHeight;

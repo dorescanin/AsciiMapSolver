@@ -11,47 +11,17 @@ public class AsciiMapBuildingTest {
 
     @Test
     public void testMapBuilding1() {
-
-        String map =
-                "@---A---+\r\n" +
-                "        |\r\n" +
-                "x-B-+   C\r\n" +
-                "    |   |\r\n" +
-                "    +---+";
-
-        genericMapBuilding(map, 5, 9);
+        genericMapBuilding(MapsForTesting.map1, 5, 9);
     }
 
     @Test
     public void testMapBuilding2() {
-
-        String map =
-                " @\r\n" +
-                " | C----+\r\n" +
-                " A |    |\r\n" +
-                " +---B--+\r\n" +
-                "   |      x\r\n" +
-                "   |      |\r\n" +
-                "   +---D--+";
-
-        genericMapBuilding(map, 7, 11);
+        genericMapBuilding(MapsForTesting.map2, 7, 11);
     }
 
     @Test
     public void testMapBuilding3() {
-
-        String map =
-                "  @---+\r\n" +
-                "      B\r\n" +
-                "K-----|--A\r\n" +
-                "|     |  |\r\n" +
-                "|  +--E  |\r\n" +
-                "|  |     |\r\n" +
-                "+--E--Ex C\r\n" +
-                "   |     |\r\n" +
-                "   +--F--+";
-
-        genericMapBuilding(map, 9, 10);
+        genericMapBuilding(MapsForTesting.map3, 9, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)

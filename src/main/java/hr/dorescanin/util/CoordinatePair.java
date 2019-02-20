@@ -35,4 +35,12 @@ public class CoordinatePair {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    @Override
+    public String toString() {
+        return "CoordinatePair{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
