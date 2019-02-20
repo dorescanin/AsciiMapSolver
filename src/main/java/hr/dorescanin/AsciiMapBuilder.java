@@ -1,5 +1,7 @@
 package hr.dorescanin;
 
+import java.util.Arrays;
+
 public class AsciiMapBuilder {
 
     /**
@@ -42,6 +44,19 @@ public class AsciiMapBuilder {
 
         if (matrixWidth == 0) {
             throw new IllegalArgumentException("Ascii map must have at least one column");
+        }
+
+        // resize arrays so we have a true matrix
+        for (int i = 0; i < asciiMap.length; i++) {
+            char[] line = asciiMap[i];
+            asciiMap[i] = Arrays.copyOf(line, matrixWidth);
+
+            // after copying/resizing matrix, fill null characters with empty spaces for consistency
+            for (int j = 0; j < asciiMap[i].length; j++) {
+                if (asciiMap[i][j] == '\u0000') {
+                    asciiMap[i][j] = ' ';
+                }
+            }
         }
 
         return new AsciiMap(matrixHeight, matrixWidth, asciiMap);

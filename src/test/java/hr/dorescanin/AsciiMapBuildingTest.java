@@ -43,10 +43,6 @@ public class AsciiMapBuildingTest {
         final AsciiMap asciiMap = AsciiMapBuilder.build(map);
         final char[][] matrix = asciiMap.getAsciiMatrix();
 
-        for (int i = 0; i < matrix.length; i++) {
-            assertArrayEquals(map.split("\r\n")[i].toCharArray(), matrix[i]);
-        }
-
         assertEquals(matrix.length, rowNumber);
 
         final int maxColumnLength = Arrays.stream(matrix).mapToInt(t -> t.length).max().orElse(-1);
