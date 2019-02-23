@@ -1,7 +1,11 @@
-package hr.dorescanin;
+package hr.dorescanin.model;
 
 import java.util.Arrays;
 
+/**
+ * Builder that converts a string representation of a map to an instance of {@link AsciiMap}.
+ * @see #build(String)
+ */
 public class AsciiMapBuilder {
 
     /**
@@ -22,23 +26,22 @@ public class AsciiMapBuilder {
             throw new IllegalArgumentException("Ascii map must not be null");
         }
 
+        // TODO check how this works on multiple operating systems
         final String[] lines = map.split(System.lineSeparator());
         int matrixHeight = lines.length;
 
         char[][] asciiMap = new char[matrixHeight][];
-
         int matrixWidth = 0;
-
         int lineCounter = 0;
 
-        for (String line : lines) {
 
+        // convert string line by line to 2D array while keeping track of max line width
+        for (String line : lines) {
             final int length = line.length();
 
             if (length > matrixWidth) {
                 matrixWidth = length;
             }
-
             asciiMap[lineCounter++] = line.toCharArray();
         }
 

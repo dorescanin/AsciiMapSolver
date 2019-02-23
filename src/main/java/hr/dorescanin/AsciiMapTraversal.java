@@ -1,185 +1,196 @@
 package hr.dorescanin;
 
+import hr.dorescanin.model.AsciiMap;
+import hr.dorescanin.navigation.AsciiMapNavigator;
 import hr.dorescanin.util.CoordinatePair;
-import hr.dorescanin.util.Directions;
+import hr.dorescanin.util.Direction;
+import hr.dorescanin.validation.AsciiMapValidator;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static hr.dorescanin.util.Directions.*;
+import static hr.dorescanin.util.Direction.getOpposites;
+import static hr.dorescanin.util.Direction.values;
 
-public class AsciiMapTraversal {
+/**
+ * Main class implementing algorithm for traversal. After instantiation, {@link #traverse()} should be called at most once.
+ */
+class AsciiMapTraversal {
 
-    private AsciiMap map;
-    private CoordinatePair initialPosition, currentPosition, finalPosition;
+    private static final int MAX_ITERATIONS = 100000;
+    private AsciiMapNavigator navigator;
+    private CoordinatePair initialPosition;
+    private CoordinatePair currentPosition;
     private StringBuilder letters = new StringBuilder();
     private StringBuilder pathAsCharacters = new StringBuilder();
     private Set<CoordinatePair> visitedCoordinates;
+    private Direction forbidden, continuation;
 
-    public AsciiMapTraversal(AsciiMap map) {
-        this.map = map;
+    private final Pattern uppercaseLetters = Pattern.compile("[A-Z]");
+    private boolean isAlreadyTraversed = false;
+
+    AsciiMapTraversal(AsciiMap map) {
         final AsciiMapValidator validator = new AsciiMapValidator(map);
         initialPosition = validator.validateInitialPosition();
         currentPosition = initialPosition;
-        finalPosition = validator.validateFinalPosition();
+        validator.validateFinalPosition();
         visitedCoordinates = new HashSet<>();
         visitedCoordinates.add(initialPosition);
         pathAsCharacters.append("@");
+        navigator = new AsciiMapNavigator(map);
     }
 
-    public void traverse() {
+    /**
+     * Entry point for traversal. First finds initial next position and sets all needed variables for continued iteration.
+     * Afterwards, tries to find the final character in the map.
+     */
+    void traverse() {
 
-        System.out.println(currentPosition);
-        System.out.println(peek(DOWN));
-        goNext(currentPosition, DOWN);
-        goNext(currentPosition, DOWN);
-        goNext(currentPosition, DOWN);
-        System.out.println(currentPosition);
+        if (isAlreadyTraversed) {
+            throw new IllegalStateException("Map traversal can be used only once per class");
+        }
 
+        isAlreadyTraversed = true;
+
+        for (Direction d : values()) {
+            final char nextChar = peek(d);
+            if (nextChar != ' ') {
+                continuation = d;
+                forbidden = d.getOpposite();
+                goNext(initialPosition, d);
+                break;
+            }
+        }
+
+        for (int i = 0; i < MAX_ITERATIONS; i++) {
+            final Direction d = findNextPossibleDirection();
+            continuation = d;
+            forbidden = d.getOpposite();
+            goNext(currentPosition, d);
+
+            final char charAtPosition = navigator.getCharAtPosition(currentPosition);
+
+            if (charAtPosition == 'x') {
+                System.out.println("----------------------------------------------------------------------------------");
+                System.out.println(pathAsCharacters);
+                System.out.println(letters);
+                break;
+            }
+        }
     }
 
-    char peek(Directions nextDirection) {
+    /**
+     * Finds next valid direction, based on current position, direction we arrived from and direction we're heading to.
+     * <p>
+     * Example:
+     * <pre>
+     * direction of movement: ->
+     * current position: *
+     * previous position (forbidden): LEFT
+     * next favored position (continuation): RIGHT
+     *
+     *{@literal @}---A-*-+
+     *         |
+     * x-B-+   C
+     *     |   |
+     *     +---+
+     * </pre>
+     * Algorithm will try to follow the favoured direction (used for crossing already visited paths, check map 3).
+     * If that is not possible, it will try to find next possible direction. In that case, it decides that previous
+     * and continuation directions are forbidden and only 1 further direction is available, since no backtracking
+     * is possible.
+     * <p>
+     * If there are 0 or 2 further directions available, an {@link IllegalStateException} is thrown.
+     *
+     * @return Next valid direction for map traversal
+     */
+    private Direction findNextPossibleDirection() {
+
+        final char peek = peek(currentPosition, continuation);
+
+        if (peek != ' ') {
+            return continuation;
+        }
+
+        final List<Direction> otherPossibleDirections = getOpposites(Arrays.asList(forbidden, continuation));
+
+        final Direction d1 = otherPossibleDirections.get(0);
+        final Direction d2 = otherPossibleDirections.get(1);
+
+        final char c1 = peek(currentPosition, d1);
+        final char c2 = peek(currentPosition, d2);
+
+        if (c1 != ' ' && c2 != ' ') {
+            throw new IllegalStateException("Map doesn't seem to be traversible! Two other locations are possible!");
+        }
+
+        if (c1 == ' ' && c2 == ' ') {
+            throw new IllegalStateException("Map doesn't seem to be traversible! No other locations are possible!");
+        }
+
+        return c1 != ' ' ? d1 : d2;
+    }
+
+    private char peek(Direction nextDirection) {
         return peek(currentPosition, nextDirection);
     }
 
-    char peek(CoordinatePair currentPosition, Directions nextDirection) {
-        final CoordinatePair nextPosition = nextPosition(currentPosition, nextDirection);
+    /**
+     * Checks what lies at next position.
+     * @param currentPosition Location from which peeking is being done.
+     * @param nextDirection Direction for peeking.
+     * @return Valid character, or empty character in case location is not traversable.
+     */
+    private char peek(CoordinatePair currentPosition, Direction nextDirection) {
+        final CoordinatePair nextPosition = navigator.nextPosition(currentPosition, nextDirection);
         if (nextPosition != null) {
-            return getCharAtPosition(nextPosition);
+            return navigator.getCharAtPosition(nextPosition);
         }
         return ' ';
     }
 
-    CoordinatePair goNext(CoordinatePair currentPosition, Directions nextDirection) {
-        final CoordinatePair newPosition = nextPosition(currentPosition, nextDirection);
+    /**
+     * Goes to next position and marks character that's being found.
+     * @param currentPosition Current position.
+     * @param nextDirection Further direction.
+     */
+    private void goNext(CoordinatePair currentPosition, Direction nextDirection) {
+        final CoordinatePair newPosition = navigator.nextPosition(currentPosition, nextDirection);
+        final char charAtPosition = navigator.getCharAtPosition(newPosition);
+        pathAsCharacters.append(charAtPosition);
+
         if (!visitedCoordinates.contains(newPosition)) {
             visitedCoordinates.add(newPosition);
-            final char charAtPosition = getCharAtPosition(newPosition);
-            pathAsCharacters.append(charAtPosition);
-            final Pattern bigletter = Pattern.compile("[A-Z]");
-            final boolean isBigLetter = bigletter.matcher(Character.toString(charAtPosition)).matches();
+            final boolean isBigLetter = isUppercaseLetter(charAtPosition);
             if (isBigLetter) {
                 letters.append(charAtPosition);
             }
         }
+
         this.currentPosition = newPosition;
-        return newPosition;
     }
 
-
-    CoordinatePair nextPosition(CoordinatePair currentPosition, Directions nextDirection) {
-        final int x = currentPosition.getX();
-        final int y = currentPosition.getY();
-
-        if (nextDirection == null) {
-            return null;
-        }
-
-        switch (nextDirection) {
-            case LEFT:
-                if (isNextPositionWithinMatrix(x, y, LEFT) && isLeftNonEmpty(x, y)) {
-                    return shiftLeft(x, y);
-                }
-                break;
-            case RIGHT:
-                if (isNextPositionWithinMatrix(x, y, RIGHT) && isRightNonEmpty(x, y)) {
-                    return shiftRight(x, y);
-                }
-                break;
-            case UP:
-                if (isNextPositionWithinMatrix(x, y, UP) && isUpNonEmpty(x, y)) {
-                    return shiftUp(x, y);
-                }
-                break;
-            case DOWN:
-                if (isNextPositionWithinMatrix(x, y, DOWN) && isDownNonEmpty(x, y)) {
-                    return shiftDown(x, y);
-                }
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + nextDirection);
-        }
-
-        return null;
+    /**
+     * Validate whether or not character is uppercase, only ASCII letters are supported.
+     * @param peek Character for checking.
+     * @return True if {@code peek} is in range [A-Z], false otherwise.
+     */
+    private boolean isUppercaseLetter(char peek) {
+        return uppercaseLetters.matcher(Character.toString(peek)).matches();
     }
 
-    private CoordinatePair shiftDown(int x, int y) {
-        return new CoordinatePair(x + 1, y);
+    String getLetters() {
+        return letters.toString();
     }
 
-    private CoordinatePair shiftUp(int x, int y) {
-        return new CoordinatePair(x - 1, y);
+    String getPathAsCharacters() {
+        return pathAsCharacters.toString();
     }
 
-    private CoordinatePair shiftRight(int x, int y) {
-        return new CoordinatePair(x, y + 1);
-    }
-
-    private CoordinatePair shiftLeft(int x, int y) {
-        return new CoordinatePair(x, y - 1);
-    }
-
-
-    private boolean isDownNonEmpty(int x, int y) {
-        return getCharAtPosition(x + 1, y) != ' ';
-    }
-
-    private boolean isUpNonEmpty(int x, int y) {
-        return getCharAtPosition(x - 1, y) != ' ';
-    }
-
-    private boolean isRightNonEmpty(int x, int y) {
-        return getCharAtPosition(x, y + 1) != ' ';
-    }
-
-    private boolean isLeftNonEmpty(int x, int y) {
-        return getCharAtPosition(x, y - 1) != ' ';
-    }
-
-    boolean isNextPositionWithinMatrix(int x, int y, Directions nextPosition) {
-        if (nextPosition == null) {
-            return false;
-        }
-
-        switch (nextPosition) {
-            case LEFT:
-                return y - 1 >= 0;
-            case RIGHT:
-                return y + 1 < map.getMatrixWidth();
-            case UP:
-                return x - 1 >= 0;
-            case DOWN:
-                return x + 1 < map.getMatrixHeight();
-            default:
-                throw new IllegalStateException("Unexpected value: " + nextPosition);
-        }
-    }
-
-    boolean isNextPositionValid(CoordinatePair currentPosition, Directions nextPosition) {
-        final int x = currentPosition.getX();
-        final int y = currentPosition.getY();
-
-        if (nextPosition == null) {
-            return false;
-        }
-
-
-
-
-        return false;
-    }
-
-    private char getCharAtPosition(CoordinatePair pair) {
-        return getCharAtPosition(pair.getX(), pair.getY());
-    }
-
-    private char getCharAtPosition(int x, int y) {
-        final char[][] matrix = map.getAsciiMatrix();
-         return matrix[x][y];
-    }
-
-    public AsciiMap getMap() {
-        return map;
+    AsciiMapNavigator getNavigator() {
+        return navigator;
     }
 }

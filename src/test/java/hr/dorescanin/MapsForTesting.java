@@ -1,34 +1,40 @@
 package hr.dorescanin;
 
-public class MapsForTesting {
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
-    public static String map1 =
+class MapsForTesting {
 
-            "@---A---+\r\n" +
-            "        |\r\n" +
-            "x-B-+   C\r\n" +
-            "    |   |\r\n" +
-            "    +---+";
 
-    public static String map2 =
+    static String map1() {
+        return getMapContentFromFile("map1.txt");
+    }
 
-            " @\r\n" +
-            " | C----+\r\n" +
-            " A |    |\r\n" +
-            " +---B--+\r\n" +
-            "   |      x\r\n" +
-            "   |      |\r\n" +
-            "   +---D--+";
+    static String map2() {
+        return getMapContentFromFile("map2.txt");
+    }
 
-    public static String map3 =
+    static String map3() {
+        return getMapContentFromFile("map3.txt");
+    }
 
-            "  @---+\r\n" +
-            "      B\r\n" +
-            "K-----|--A\r\n" +
-            "|     |  |\r\n" +
-            "|  +--E  |\r\n" +
-            "|  |     |\r\n" +
-            "+--E--Ex C\r\n" +
-            "   |     |\r\n" +
-            "   +--F--+";
+    static String mapDoubleStart() {
+        return getMapContentFromFile("mapDoubleStart.txt");
+    }
+
+    static String mapDoubleEnd() {
+        return getMapContentFromFile("mapDoubleEnd.txt");
+    }
+
+    private static String getMapContentFromFile(String fileName) {
+        final File file = new File("src/test/java/hr/dorescanin/" + fileName);
+
+        try {
+            return new String(Files.readAllBytes(file.toPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

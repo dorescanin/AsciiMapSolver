@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static hr.dorescanin.util.Directions.*;
+import static hr.dorescanin.util.Direction.*;
 
-public class DirectionsTest {
+public class DirectionTest {
 
     @Test
     public void getOpposite() {
@@ -23,11 +23,11 @@ public class DirectionsTest {
     @Test
     public void getPerpendicular() {
 
-        final List<Directions> leftRight = new ArrayList<>();
+        final List<Direction> leftRight = new ArrayList<>();
         leftRight.add(LEFT);
         leftRight.add(RIGHT);
 
-        final List<Directions> upDown = new ArrayList<>();
+        final List<Direction> upDown = new ArrayList<>();
         upDown.add(UP);
         upDown.add(DOWN);
 
@@ -39,10 +39,10 @@ public class DirectionsTest {
 
     @Test
     public void testOpposites() {
-        Assert.assertEquals(Collections.emptyList(), Directions.getOpposites(Arrays.asList(UP, LEFT, RIGHT, DOWN)));
-        Assert.assertEquals(Arrays.asList(UP, DOWN), Directions.getOpposites(Arrays.asList(LEFT, RIGHT)));
-        Assert.assertEquals(Arrays.asList(LEFT, UP, DOWN), Directions.getOpposites(Collections.singletonList(RIGHT)));
-        Assert.assertEquals(Collections.singletonList(UP), Directions.getOpposites(Arrays.asList(LEFT, RIGHT, DOWN)));
-        Assert.assertEquals(Arrays.asList(LEFT, RIGHT, UP, DOWN), Directions.getOpposites(Collections.emptyList()));
+        Assert.assertEquals(Collections.emptyList(), Direction.getOpposites(Arrays.asList(UP, LEFT, RIGHT, DOWN)));
+        Assert.assertEquals(Arrays.asList(UP, DOWN), Direction.getOpposites(Arrays.asList(LEFT, RIGHT)));
+        Assert.assertEquals(Arrays.asList(LEFT, UP, DOWN), Direction.getOpposites(Collections.singletonList(RIGHT)));
+        Assert.assertEquals(Collections.singletonList(UP), Direction.getOpposites(Arrays.asList(LEFT, RIGHT, DOWN)));
+        Assert.assertEquals(Arrays.asList(LEFT, RIGHT, UP, DOWN), Direction.getOpposites(Collections.emptyList()));
     }
 }

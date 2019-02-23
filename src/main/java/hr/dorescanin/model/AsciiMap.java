@@ -1,5 +1,8 @@
-package hr.dorescanin;
+package hr.dorescanin.model;
 
+/**
+ * Main class that represents the ascii matrix in terms of a 2D char field.
+ */
 public class AsciiMap {
 
     private int matrixHeight;
@@ -27,7 +30,7 @@ public class AsciiMap {
         return matrixWidth;
     }
 
-    char[][] getAsciiMatrix() {
+    public char[][] getAsciiMatrix() {
         return asciiMatrix;
     }
 }
