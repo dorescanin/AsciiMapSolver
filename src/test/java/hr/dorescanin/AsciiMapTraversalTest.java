@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static hr.dorescanin.MapsForTesting.*;
+import static hr.dorescanin.MapsForTesting.map2;
 import static org.junit.Assert.*;
 
 public class AsciiMapTraversalTest {
@@ -46,7 +47,8 @@ public class AsciiMapTraversalTest {
 
     @Test
     public void testTraversal() {
-        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(map2));
+        final String map = MapsForTesting.map3;
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(map));
         traversal.traverse();
     }
 }

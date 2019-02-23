@@ -3,7 +3,9 @@ package hr.dorescanin;
 import hr.dorescanin.util.CoordinatePair;
 import hr.dorescanin.util.Directions;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -16,6 +18,9 @@ public class AsciiMapTraversal {
     private StringBuilder letters = new StringBuilder();
     private StringBuilder pathAsCharacters = new StringBuilder();
     private Set<CoordinatePair> visitedCoordinates;
+    private Directions forbidden, continuation;
+
+    private final Pattern bigletter = Pattern.compile("[A-Z]");
 
     public AsciiMapTraversal(AsciiMap map) {
         this.map = map;
@@ -30,13 +35,68 @@ public class AsciiMapTraversal {
 
     public void traverse() {
 
-        System.out.println(currentPosition);
-        System.out.println(peek(DOWN));
-        goNext(currentPosition, DOWN);
-        goNext(currentPosition, DOWN);
-        goNext(currentPosition, DOWN);
-        System.out.println(currentPosition);
+        for (Directions d : values()) {
+            final char nextChar = peek(d);
+            if (nextChar != ' ') {
+                continuation = d;
+                forbidden = d.getOpposite();
+                goNext(initialPosition, d);
+                break;
+            }
+        }
 
+        for (int i = 0; i < 1000; i++) {
+
+            final Directions d = findNextPossibleDirection();
+            continuation = d;
+            forbidden = d.getOpposite();
+            goNext(currentPosition, d);
+
+            System.out.println("----------------------");
+            System.out.println(currentPosition);
+            System.out.println(pathAsCharacters);
+            System.out.println(letters);
+
+            final char charAtPosition = getCharAtPosition(currentPosition);
+
+            if (charAtPosition == 'x') {
+                System.out.println("Win!");
+                break;
+            }
+        }
+    }
+
+
+    private Directions findNextPossibleDirection() {
+
+        final char peek = peek(currentPosition, continuation);
+
+        if (peek != ' ') {
+            return continuation;
+        }
+
+        final List<Directions> otherPossibleDirections = getOpposites(Arrays.asList(forbidden, continuation));
+
+        final Directions d1 = otherPossibleDirections.get(0);
+        final Directions d2 = otherPossibleDirections.get(1);
+
+        final char c1 = peek(currentPosition, d1);
+        final char c2 = peek(currentPosition, d2);
+
+        if (c1 != ' ' && c2 != ' ') {
+            throw new IllegalStateException("Map doesn't seem to be traversible! Two other locations are possible!");
+        }
+
+        if (c1 == ' ' && c2 == ' ') {
+            throw new IllegalStateException("Map doesn't seem to be traversible! No other locations are possible!");
+        }
+
+        return c1 != ' ' ? d1 : d2;
+    }
+
+
+    private boolean isUppercaseLetter(char peek) {
+        return bigletter.matcher(Character.toString(peek)).matches();
     }
 
     char peek(Directions nextDirection) {
@@ -53,16 +113,17 @@ public class AsciiMapTraversal {
 
     CoordinatePair goNext(CoordinatePair currentPosition, Directions nextDirection) {
         final CoordinatePair newPosition = nextPosition(currentPosition, nextDirection);
+        final char charAtPosition = getCharAtPosition(newPosition);
+        pathAsCharacters.append(charAtPosition);
+
         if (!visitedCoordinates.contains(newPosition)) {
             visitedCoordinates.add(newPosition);
-            final char charAtPosition = getCharAtPosition(newPosition);
-            pathAsCharacters.append(charAtPosition);
-            final Pattern bigletter = Pattern.compile("[A-Z]");
-            final boolean isBigLetter = bigletter.matcher(Character.toString(charAtPosition)).matches();
+            final boolean isBigLetter = isUppercaseLetter(charAtPosition);
             if (isBigLetter) {
                 letters.append(charAtPosition);
             }
         }
+
         this.currentPosition = newPosition;
         return newPosition;
     }
