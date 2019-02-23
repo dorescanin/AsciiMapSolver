@@ -5,6 +5,7 @@ import hr.dorescanin.util.Directions;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static hr.dorescanin.util.Directions.*;
 
@@ -24,44 +25,18 @@ public class AsciiMapTraversal {
         finalPosition = validator.validateFinalPosition();
         visitedCoordinates = new HashSet<>();
         visitedCoordinates.add(initialPosition);
+        pathAsCharacters.append("@");
     }
 
     public void traverse() {
 
         System.out.println(currentPosition);
         System.out.println(peek(DOWN));
+        goNext(currentPosition, DOWN);
+        goNext(currentPosition, DOWN);
+        goNext(currentPosition, DOWN);
+        System.out.println(currentPosition);
 
-//        CoordinatePair nextPosition = null;
-//        Directions formerLocation;
-//
-//        for (int i = 0; i < 1; i++) {
-//            nextPosition = nextPosition(initialPosition, LEFT);
-//            formerLocation = RIGHT;
-//
-//            if (nextPosition == null) {
-//                nextPosition = nextPosition(initialPosition, RIGHT);
-//                formerLocation = LEFT;
-//            }
-//
-//            if (nextPosition == null) {
-//                nextPosition = nextPosition(initialPosition, UP);
-//                formerLocation = DOWN;
-//            }
-//
-//            if (nextPosition == null) {
-//                nextPosition = nextPosition(initialPosition, DOWN);
-//                formerLocation = UP;
-//            }
-//
-//            System.out.println(nextPosition);
-//            final int x = nextPosition.getX();
-//            final int y = nextPosition.getY();
-//            System.out.println(map.getAsciiMatrix()[x][y]);
-//        }
-//
-//        if (nextPosition == null) {
-//            throw new IllegalStateException("Cannot go to next position!");
-//        }
     }
 
     char peek(Directions nextDirection) {
@@ -76,7 +51,21 @@ public class AsciiMapTraversal {
         return ' ';
     }
 
-
+    CoordinatePair goNext(CoordinatePair currentPosition, Directions nextDirection) {
+        final CoordinatePair newPosition = nextPosition(currentPosition, nextDirection);
+        if (!visitedCoordinates.contains(newPosition)) {
+            visitedCoordinates.add(newPosition);
+            final char charAtPosition = getCharAtPosition(newPosition);
+            pathAsCharacters.append(charAtPosition);
+            final Pattern bigletter = Pattern.compile("[A-Z]");
+            final boolean isBigLetter = bigletter.matcher(Character.toString(charAtPosition)).matches();
+            if (isBigLetter) {
+                letters.append(charAtPosition);
+            }
+        }
+        this.currentPosition = newPosition;
+        return newPosition;
+    }
 
 
     CoordinatePair nextPosition(CoordinatePair currentPosition, Directions nextDirection) {
