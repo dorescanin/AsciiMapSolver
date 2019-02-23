@@ -3,60 +3,81 @@ package hr.dorescanin;
 import hr.dorescanin.util.CoordinatePair;
 import hr.dorescanin.util.Directions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static hr.dorescanin.util.Directions.*;
 
 public class AsciiMapTraversal {
 
     private AsciiMap map;
-    private CoordinatePair initialPosition, finalPosition;
+    private CoordinatePair initialPosition, currentPosition, finalPosition;
     private StringBuilder letters = new StringBuilder();
     private StringBuilder pathAsCharacters = new StringBuilder();
+    private Set<CoordinatePair> visitedCoordinates;
 
     public AsciiMapTraversal(AsciiMap map) {
         this.map = map;
         final AsciiMapValidator validator = new AsciiMapValidator(map);
-        this.initialPosition = validator.validateInitialPosition();
-        this.finalPosition = validator.validateFinalPosition();
+        initialPosition = validator.validateInitialPosition();
+        currentPosition = initialPosition;
+        finalPosition = validator.validateFinalPosition();
+        visitedCoordinates = new HashSet<>();
+        visitedCoordinates.add(initialPosition);
     }
 
     public void traverse() {
 
-        CoordinatePair nextPosition = null;
-        Directions formerLocation;
+        System.out.println(currentPosition);
+        System.out.println(peek(DOWN));
 
-        for (int i = 0; i < 1; i++) {
-            nextPosition = nextPosition(initialPosition, LEFT);
-            formerLocation = RIGHT;
-
-            if (nextPosition == null) {
-                nextPosition = nextPosition(initialPosition, RIGHT);
-                formerLocation = LEFT;
-            }
-
-            if (nextPosition == null) {
-                nextPosition = nextPosition(initialPosition, UP);
-                formerLocation = DOWN;
-            }
-
-            if (nextPosition == null) {
-                nextPosition = nextPosition(initialPosition, DOWN);
-                formerLocation = UP;
-            }
-
-            System.out.println(nextPosition);
-            final int x = nextPosition.getX();
-            final int y = nextPosition.getY();
-            System.out.println(map.getAsciiMatrix()[x][y]);
-        }
-
-        if (nextPosition == null) {
-            throw new IllegalStateException("Cannot go to next position!");
-        }
-
-
-
-
+//        CoordinatePair nextPosition = null;
+//        Directions formerLocation;
+//
+//        for (int i = 0; i < 1; i++) {
+//            nextPosition = nextPosition(initialPosition, LEFT);
+//            formerLocation = RIGHT;
+//
+//            if (nextPosition == null) {
+//                nextPosition = nextPosition(initialPosition, RIGHT);
+//                formerLocation = LEFT;
+//            }
+//
+//            if (nextPosition == null) {
+//                nextPosition = nextPosition(initialPosition, UP);
+//                formerLocation = DOWN;
+//            }
+//
+//            if (nextPosition == null) {
+//                nextPosition = nextPosition(initialPosition, DOWN);
+//                formerLocation = UP;
+//            }
+//
+//            System.out.println(nextPosition);
+//            final int x = nextPosition.getX();
+//            final int y = nextPosition.getY();
+//            System.out.println(map.getAsciiMatrix()[x][y]);
+//        }
+//
+//        if (nextPosition == null) {
+//            throw new IllegalStateException("Cannot go to next position!");
+//        }
     }
+
+    char peek(Directions nextDirection) {
+        return peek(currentPosition, nextDirection);
+    }
+
+    char peek(CoordinatePair currentPosition, Directions nextDirection) {
+        final CoordinatePair nextPosition = nextPosition(currentPosition, nextDirection);
+        if (nextPosition != null) {
+            return getCharAtPosition(nextPosition);
+        }
+        return ' ';
+    }
+
+
+
 
     CoordinatePair nextPosition(CoordinatePair currentPosition, Directions nextDirection) {
         final int x = currentPosition.getX();
