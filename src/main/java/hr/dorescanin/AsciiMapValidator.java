@@ -12,7 +12,7 @@ public class AsciiMapValidator {
 
     public CoordinatePair validateInitialPosition() {
 
-        CoordinatePair startPosition = findToken(map.getAsciiMatrix(), '@', "More than one start position ('@') found!");
+        CoordinatePair startPosition = findToken(map, '@', "More than one start position ('@') found!");
 
         if (startPosition == null) {
             throw new IllegalStateException("No start position ('@') found!");
@@ -24,7 +24,7 @@ public class AsciiMapValidator {
 
     public CoordinatePair validateFinalPosition() {
 
-        CoordinatePair startPosition = findToken(map.getAsciiMatrix(), 'x', "More than one end position ('x') found!");
+        CoordinatePair startPosition = findToken(map, 'x', "More than one end position ('x') found!");
 
         if (startPosition == null) {
             throw new IllegalStateException("No end position ('x') found!");
@@ -33,7 +33,8 @@ public class AsciiMapValidator {
         return startPosition;
     }
 
-    private CoordinatePair findToken(char[][] matrix, char searchingToken, String multipleTokensFound) {
+    private CoordinatePair findToken(AsciiMap map, char searchingToken, String multipleTokensFound) {
+        final char[][] matrix = map.getAsciiMatrix();
         CoordinatePair startPosition = null;
         int counter = 0;
         for (int i = 0; i < matrix.length; i++) {
