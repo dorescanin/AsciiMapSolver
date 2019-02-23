@@ -11,7 +11,7 @@ public class AsciiMapTraversalTest {
 
     @Test
     public void isNextPositionWithinMatrix() {
-        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(map1));
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(map1()));
         final AsciiMapNavigator navigator = traversal.getNavigator();
 
         // upper left
@@ -47,7 +47,7 @@ public class AsciiMapTraversalTest {
 
     @Test
     public void testTraversal1() {
-        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map1));
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map1()));
         traversal.traverse();
         Assert.assertEquals(traversal.getLetters(), "ACB");
         Assert.assertEquals(traversal.getPathAsCharacters(), "@---A---+|C|+---+|+-B-x");

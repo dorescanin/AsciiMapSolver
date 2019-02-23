@@ -11,7 +11,7 @@ public class AsciiMapValidationTest {
 
     @Test
     public void testMap1() {
-        final AsciiMap map1 = AsciiMapBuilder.build(MapsForTesting.map1);
+        final AsciiMap map1 = AsciiMapBuilder.build(MapsForTesting.map1());
         final AsciiMapValidator validator = new AsciiMapValidator(map1);
         final CoordinatePair initialPosition = validator.validateInitialPosition();
         final CoordinatePair finalPosition = validator.validateFinalPosition();

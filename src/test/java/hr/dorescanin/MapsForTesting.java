@@ -1,14 +1,23 @@
 package hr.dorescanin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 class MapsForTesting {
 
-    static String map1 =
 
-            "@---A---+\r\n" +
-            "        |\r\n" +
-            "x-B-+   C\r\n" +
-            "    |   |\r\n" +
-            "    +---+";
+    static String map1() {
+        final File file = new File("src/test/java/hr/dorescanin/map1.txt");
+
+        try {
+            return new String(Files.readAllBytes(file.toPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     static String map2 =
 

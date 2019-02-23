@@ -12,7 +12,7 @@ public class AsciiMapBuildingTest {
 
     @Test
     public void testMapBuilding1() {
-        genericMapBuilding(MapsForTesting.map1, 5, 9);
+        genericMapBuilding(MapsForTesting.map1(), 5, 9);
     }
 
     @Test
