@@ -19,6 +19,14 @@ class MapsForTesting {
         return getMapContentFromFile("map3.txt");
     }
 
+    static String mapDoubleStart() {
+        return getMapContentFromFile("mapDoubleStart.txt");
+    }
+
+    static String mapDoubleEnd() {
+        return getMapContentFromFile("mapDoubleEnd.txt");
+    }
+
     private static String getMapContentFromFile(String fileName) {
         final File file = new File("src/test/java/hr/dorescanin/" + fileName);
 

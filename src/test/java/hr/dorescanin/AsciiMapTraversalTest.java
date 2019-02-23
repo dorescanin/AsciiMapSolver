@@ -70,4 +70,22 @@ public class AsciiMapTraversalTest {
         Assert.assertEquals(traversal.getPathAsCharacters(), "@---+B||E--+|E|+--F--+|C|||A--|-----K|||+--E--Ex");
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testTraversalTwice() {
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map1()));
+        traversal.traverse();
+        traversal.traverse();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testTraversalDoubleStart() {
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.mapDoubleStart()));
+        traversal.traverse();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testTraversalDoubleEnd() {
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.mapDoubleEnd()));
+        traversal.traverse();
+    }
 }
