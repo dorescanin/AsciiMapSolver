@@ -3,6 +3,10 @@ package hr.dorescanin.validation;
 import hr.dorescanin.model.AsciiMap;
 import hr.dorescanin.util.CoordinatePair;
 
+/**
+ * Validates whether map is in legal state before beginning traversal - exactly one starting position ('@') and one
+ * ending position ('x') must be present. If map isn't in legal state, a {@link IllegalStateException} will be thrown.
+ */
 public class AsciiMapValidator {
 
     private AsciiMap map;

@@ -15,8 +15,12 @@ import java.util.regex.Pattern;
 import static hr.dorescanin.util.Direction.getOpposites;
 import static hr.dorescanin.util.Direction.values;
 
+/**
+ * Main class implementing algorithm for traversal. After instantiation, {@link #traverse()} should be called at most once.
+ */
 class AsciiMapTraversal {
 
+    private static final int MAX_ITERATIONS = 100000;
     private AsciiMapNavigator navigator;
     private CoordinatePair initialPosition;
     private CoordinatePair currentPosition;
@@ -50,8 +54,7 @@ class AsciiMapTraversal {
             }
         }
 
-        for (int i = 0; i < 1000; i++) {
-
+        for (int i = 0; i < MAX_ITERATIONS; i++) {
             final Direction d = findNextPossibleDirection();
             continuation = d;
             forbidden = d.getOpposite();
@@ -60,8 +63,7 @@ class AsciiMapTraversal {
             final char charAtPosition = navigator.getCharAtPosition(currentPosition);
 
             if (charAtPosition == 'x') {
-                System.out.println("Win!");
-                System.out.println(currentPosition);
+                System.out.println("----------------------------------------------------------------------------------");
                 System.out.println(pathAsCharacters);
                 System.out.println(letters);
                 break;

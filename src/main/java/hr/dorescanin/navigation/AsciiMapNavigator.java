@@ -6,6 +6,10 @@ import hr.dorescanin.util.Direction;
 
 import static hr.dorescanin.util.Direction.*;
 
+/**
+ * Utility class for navigation. Operates on {@link AsciiMap} and is used for checking if navigation to
+ * next direction is possible and for getting character at given coordinates.
+ */
 public class AsciiMapNavigator {
 
     private AsciiMap map;
@@ -14,6 +18,11 @@ public class AsciiMapNavigator {
         this.map = map;
     }
 
+    /**
+     * Finds next valid coordinates given the current position and wanted direction.
+     * @return Valid coordinates, or {@code null} if it's not possible to move to wanted direction
+     * if movement would exit the map boundaries, or if there is empty space at wanted destination.
+     */
     public CoordinatePair nextPosition(CoordinatePair currentPosition, Direction nextDirection) {
         final int x = currentPosition.getX();
         final int y = currentPosition.getY();
