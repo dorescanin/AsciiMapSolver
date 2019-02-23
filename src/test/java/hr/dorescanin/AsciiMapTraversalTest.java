@@ -1,6 +1,7 @@
 package hr.dorescanin;
 
 import hr.dorescanin.model.AsciiMapBuilder;
+import hr.dorescanin.navigation.AsciiMapNavigator;
 import hr.dorescanin.util.Direction;
 import org.junit.Assert;
 import org.junit.Test;

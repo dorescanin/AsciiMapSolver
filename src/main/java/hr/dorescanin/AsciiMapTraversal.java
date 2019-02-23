@@ -1,6 +1,7 @@
 package hr.dorescanin;
 
 import hr.dorescanin.model.AsciiMap;
+import hr.dorescanin.navigation.AsciiMapNavigator;
 import hr.dorescanin.util.CoordinatePair;
 import hr.dorescanin.util.Direction;
 import hr.dorescanin.validation.AsciiMapValidator;

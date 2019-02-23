@@ -1,4 +1,4 @@
-package hr.dorescanin;
+package hr.dorescanin.navigation;
 
 import hr.dorescanin.model.AsciiMap;
 import hr.dorescanin.util.CoordinatePair;
@@ -6,15 +6,15 @@ import hr.dorescanin.util.Direction;
 
 import static hr.dorescanin.util.Direction.*;
 
-class AsciiMapNavigator {
+public class AsciiMapNavigator {
 
     private AsciiMap map;
 
-    AsciiMapNavigator(AsciiMap map) {
+    public AsciiMapNavigator(AsciiMap map) {
         this.map = map;
     }
 
-    CoordinatePair nextPosition(CoordinatePair currentPosition, Direction nextDirection) {
+    public CoordinatePair nextPosition(CoordinatePair currentPosition, Direction nextDirection) {
         final int x = currentPosition.getX();
         final int y = currentPosition.getY();
 
@@ -83,7 +83,7 @@ class AsciiMapNavigator {
         return getCharAtPosition(x, y - 1) != ' ';
     }
 
-    boolean isNextPositionWithinMatrix(int x, int y, Direction nextPosition) {
+    public boolean isNextPositionWithinMatrix(int x, int y, Direction nextPosition) {
         if (nextPosition == null) {
             return false;
         }
@@ -102,7 +102,7 @@ class AsciiMapNavigator {
         }
     }
 
-    char getCharAtPosition(CoordinatePair pair) {
+    public char getCharAtPosition(CoordinatePair pair) {
         return getCharAtPosition(pair.getX(), pair.getY());
     }
 
