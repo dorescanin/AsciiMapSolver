@@ -43,7 +43,10 @@ class AsciiMapTraversal {
         navigator = new AsciiMapNavigator(map);
     }
 
-
+    /**
+     * Entry point for traversal. First finds initial next position and sets all needed variables for continued iteration.
+     * Afterwards, tries to find the final character in the map.
+     */
     void traverse() {
 
         if (isAlreadyTraversed) {
@@ -79,34 +82,31 @@ class AsciiMapTraversal {
         }
     }
 
-    private void goNext(CoordinatePair currentPosition, Direction nextDirection) {
-        final CoordinatePair newPosition = navigator.nextPosition(currentPosition, nextDirection);
-        final char charAtPosition = navigator.getCharAtPosition(newPosition);
-        pathAsCharacters.append(charAtPosition);
-
-        if (!visitedCoordinates.contains(newPosition)) {
-            visitedCoordinates.add(newPosition);
-            final boolean isBigLetter = isUppercaseLetter(charAtPosition);
-            if (isBigLetter) {
-                letters.append(charAtPosition);
-            }
-        }
-
-        this.currentPosition = newPosition;
-    }
-
-    private char peek(Direction nextDirection) {
-        return peek(currentPosition, nextDirection);
-    }
-
-    private char peek(CoordinatePair currentPosition, Direction nextDirection) {
-        final CoordinatePair nextPosition = navigator.nextPosition(currentPosition, nextDirection);
-        if (nextPosition != null) {
-            return navigator.getCharAtPosition(nextPosition);
-        }
-        return ' ';
-    }
-
+    /**
+     * Finds next valid direction, based on current position, direction we arrived from and direction we're heading to.
+     * <p>
+     * Example:
+     * <pre>
+     * direction of movement: ->
+     * current position: *
+     * previous position (forbidden): LEFT
+     * next favored position (continuation): RIGHT
+     *
+     *{@literal @}---A-*-+
+     *         |
+     * x-B-+   C
+     *     |   |
+     *     +---+
+     * </pre>
+     * Algorithm will try to follow the favoured direction (used for crossing already visited paths, check map 3).
+     * If that is not possible, it will try to find next possible direction. In that case, it decides that previous
+     * and continuation directions are forbidden and only 1 further direction is available, since no backtracking
+     * is possible.
+     * <p>
+     * If there are 0 or 2 further directions available, an {@link IllegalStateException} is thrown.
+     *
+     * @return Next valid direction for map traversal
+     */
     private Direction findNextPossibleDirection() {
 
         final char peek = peek(currentPosition, continuation);
@@ -134,7 +134,50 @@ class AsciiMapTraversal {
         return c1 != ' ' ? d1 : d2;
     }
 
+    private char peek(Direction nextDirection) {
+        return peek(currentPosition, nextDirection);
+    }
 
+    /**
+     * Checks what lies at next position.
+     * @param currentPosition Location from which peeking is being done.
+     * @param nextDirection Direction for peeking.
+     * @return Valid character, or empty character in case location is not traversable.
+     */
+    private char peek(CoordinatePair currentPosition, Direction nextDirection) {
+        final CoordinatePair nextPosition = navigator.nextPosition(currentPosition, nextDirection);
+        if (nextPosition != null) {
+            return navigator.getCharAtPosition(nextPosition);
+        }
+        return ' ';
+    }
+
+    /**
+     * Goes to next position and marks character that's being found.
+     * @param currentPosition Current position.
+     * @param nextDirection Further direction.
+     */
+    private void goNext(CoordinatePair currentPosition, Direction nextDirection) {
+        final CoordinatePair newPosition = navigator.nextPosition(currentPosition, nextDirection);
+        final char charAtPosition = navigator.getCharAtPosition(newPosition);
+        pathAsCharacters.append(charAtPosition);
+
+        if (!visitedCoordinates.contains(newPosition)) {
+            visitedCoordinates.add(newPosition);
+            final boolean isBigLetter = isUppercaseLetter(charAtPosition);
+            if (isBigLetter) {
+                letters.append(charAtPosition);
+            }
+        }
+
+        this.currentPosition = newPosition;
+    }
+
+    /**
+     * Validate whether or not character is uppercase, only ASCII letters are supported.
+     * @param peek Character for checking.
+     * @return True if {@code peek} is in range [A-Z], false otherwise.
+     */
     private boolean isUppercaseLetter(char peek) {
         return uppercaseLetters.matcher(Character.toString(peek)).matches();
     }
