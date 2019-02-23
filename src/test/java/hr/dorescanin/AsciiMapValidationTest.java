@@ -22,18 +22,18 @@ public class AsciiMapValidationTest {
 
     @Test
     public void testMap2() {
-        final AsciiMap map2 = AsciiMapBuilder.build(MapsForTesting.map2);
+        final AsciiMap map2 = AsciiMapBuilder.build(MapsForTesting.map2());
         final AsciiMapValidator validator = new AsciiMapValidator(map2);
         final CoordinatePair initialPosition = validator.validateInitialPosition();
         final CoordinatePair finalPosition = validator.validateFinalPosition();
 
-        Assert.assertEquals(initialPosition, new CoordinatePair(0, 1));
-        Assert.assertEquals(finalPosition, new CoordinatePair(4, 10));
+        Assert.assertEquals(initialPosition, new CoordinatePair(0, 0));
+        Assert.assertEquals(finalPosition, new CoordinatePair(4, 9));
     }
 
     @Test
     public void testMap3() {
-        final AsciiMap map3 = AsciiMapBuilder.build(MapsForTesting.map3);
+        final AsciiMap map3 = AsciiMapBuilder.build(MapsForTesting.map3());
         final AsciiMapValidator validator = new AsciiMapValidator(map3);
         final CoordinatePair initialPosition = validator.validateInitialPosition();
         final CoordinatePair finalPosition = validator.validateFinalPosition();

@@ -55,7 +55,7 @@ public class AsciiMapTraversalTest {
 
     @Test
     public void testTraversal2() {
-        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map2));
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map2()));
         traversal.traverse();
         Assert.assertEquals(traversal.getLetters(), "ABCD");
         Assert.assertEquals(traversal.getPathAsCharacters(), "@|A+---B--+|+----C|-||+---D--+|x");
@@ -63,7 +63,7 @@ public class AsciiMapTraversalTest {
 
     @Test
     public void testTraversal3() {
-        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map3));
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map3()));
         traversal.traverse();
         Assert.assertEquals(traversal.getLetters(), "BEEFCAKE");
         Assert.assertEquals(traversal.getPathAsCharacters(), "@---+B||E--+|E|+--F--+|C|||A--|-----K|||+--E--Ex");

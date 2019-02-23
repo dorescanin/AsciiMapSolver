@@ -17,12 +17,12 @@ public class AsciiMapBuildingTest {
 
     @Test
     public void testMapBuilding2() {
-        genericMapBuilding(MapsForTesting.map2, 7, 11);
+        genericMapBuilding(MapsForTesting.map2(), 7, 10);
     }
 
     @Test
     public void testMapBuilding3() {
-        genericMapBuilding(MapsForTesting.map3, 9, 10);
+        genericMapBuilding(MapsForTesting.map3(), 9, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)

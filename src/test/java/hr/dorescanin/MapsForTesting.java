@@ -8,7 +8,19 @@ class MapsForTesting {
 
 
     static String map1() {
-        final File file = new File("src/test/java/hr/dorescanin/map1.txt");
+        return getMapContentFromFile("map1.txt");
+    }
+
+    static String map2() {
+        return getMapContentFromFile("map2.txt");
+    }
+
+    static String map3() {
+        return getMapContentFromFile("map3.txt");
+    }
+
+    private static String getMapContentFromFile(String fileName) {
+        final File file = new File("src/test/java/hr/dorescanin/" + fileName);
 
         try {
             return new String(Files.readAllBytes(file.toPath()));
@@ -17,27 +29,4 @@ class MapsForTesting {
         }
         return null;
     }
-
-
-    static String map2 =
-
-            " @\r\n" +
-            " | C----+\r\n" +
-            " A |    |\r\n" +
-            " +---B--+\r\n" +
-            "   |      x\r\n" +
-            "   |      |\r\n" +
-            "   +---D--+";
-
-    static String map3 =
-
-            "  @---+\r\n" +
-            "      B\r\n" +
-            "K-----|--A\r\n" +
-            "|     |  |\r\n" +
-            "|  +--E  |\r\n" +
-            "|  |     |\r\n" +
-            "+--E--Ex C\r\n" +
-            "   |     |\r\n" +
-            "   +--F--+";
 }
