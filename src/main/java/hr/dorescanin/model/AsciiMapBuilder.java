@@ -1,4 +1,4 @@
-package hr.dorescanin;
+package hr.dorescanin.model;
 
 import java.util.Arrays;
 

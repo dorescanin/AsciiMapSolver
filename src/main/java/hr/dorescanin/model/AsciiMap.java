@@ -1,4 +1,4 @@
-package hr.dorescanin;
+package hr.dorescanin.model;
 
 public class AsciiMap {
 
@@ -27,7 +27,7 @@ public class AsciiMap {
         return matrixWidth;
     }
 
-    char[][] getAsciiMatrix() {
+    public char[][] getAsciiMatrix() {
         return asciiMatrix;
     }
 }

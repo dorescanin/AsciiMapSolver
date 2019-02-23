@@ -38,9 +38,6 @@ public class CoordinatePair {
 
     @Override
     public String toString() {
-        return "CoordinatePair{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "{x=" + x + ", y=" + y + '}';
     }
 }

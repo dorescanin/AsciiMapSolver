@@ -1,9 +1,10 @@
 package hr.dorescanin;
 
+import hr.dorescanin.model.AsciiMap;
+import hr.dorescanin.model.AsciiMapBuilder;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.OptionalInt;
 
 import static org.junit.Assert.*;
 

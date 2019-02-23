@@ -1,5 +1,6 @@
-package hr.dorescanin;
+package hr.dorescanin.validation;
 
+import hr.dorescanin.model.AsciiMap;
 import hr.dorescanin.util.CoordinatePair;
 
 public class AsciiMapValidator {

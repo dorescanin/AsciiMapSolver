@@ -1,54 +1,72 @@
 package hr.dorescanin;
 
-import hr.dorescanin.util.Directions;
+import hr.dorescanin.model.AsciiMapBuilder;
+import hr.dorescanin.util.Direction;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static hr.dorescanin.MapsForTesting.*;
-import static hr.dorescanin.MapsForTesting.map2;
-import static org.junit.Assert.*;
+import static hr.dorescanin.MapsForTesting.map1;
 
 public class AsciiMapTraversalTest {
 
     @Test
     public void isNextPositionWithinMatrix() {
         final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(map1));
+        final AsciiMapNavigator navigator = traversal.getNavigator();
 
         // upper left
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(0, 0, Directions.LEFT));
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(0, 0, Directions.UP));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(0, 0, Directions.RIGHT));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(0, 0, Directions.DOWN));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(0, 0, Direction.LEFT));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(0, 0, Direction.UP));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(0, 0, Direction.RIGHT));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(0, 0, Direction.DOWN));
 
         // lower right
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(4, 8, Directions.LEFT));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(4, 8, Directions.UP));
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(4, 8, Directions.RIGHT));
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(4, 8, Directions.DOWN));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(4, 8, Direction.LEFT));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(4, 8, Direction.UP));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(4, 8, Direction.RIGHT));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(4, 8, Direction.DOWN));
 
         // lower left
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(4, 0, Directions.LEFT));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(4, 0, Directions.UP));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(4, 0, Directions.RIGHT));
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(4, 0, Directions.DOWN));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(4, 0, Direction.LEFT));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(4, 0, Direction.UP));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(4, 0, Direction.RIGHT));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(4, 0, Direction.DOWN));
 
         // upper right
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(0, 8, Directions.LEFT));
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(0, 8, Directions.UP));
-        Assert.assertFalse(traversal.isNextPositionWithinMatrix(0, 8, Directions.RIGHT));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(0, 8, Directions.DOWN));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(0, 8, Direction.LEFT));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(0, 8, Direction.UP));
+        Assert.assertFalse(navigator.isNextPositionWithinMatrix(0, 8, Direction.RIGHT));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(0, 8, Direction.DOWN));
 
         // center
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(2, 4, Directions.LEFT));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(2, 4, Directions.UP));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(2, 4, Directions.RIGHT));
-        Assert.assertTrue(traversal.isNextPositionWithinMatrix(2, 4, Directions.DOWN));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(2, 4, Direction.LEFT));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(2, 4, Direction.UP));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(2, 4, Direction.RIGHT));
+        Assert.assertTrue(navigator.isNextPositionWithinMatrix(2, 4, Direction.DOWN));
     }
 
     @Test
-    public void testTraversal() {
-        final String map = MapsForTesting.map3;
-        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(map));
+    public void testTraversal1() {
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map1));
         traversal.traverse();
+        Assert.assertEquals(traversal.getLetters(), "ACB");
+        Assert.assertEquals(traversal.getPathAsCharacters(), "@---A---+|C|+---+|+-B-x");
     }
+
+    @Test
+    public void testTraversal2() {
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map2));
+        traversal.traverse();
+        Assert.assertEquals(traversal.getLetters(), "ABCD");
+        Assert.assertEquals(traversal.getPathAsCharacters(), "@|A+---B--+|+----C|-||+---D--+|x");
+    }
+
+    @Test
+    public void testTraversal3() {
+        final AsciiMapTraversal traversal = new AsciiMapTraversal(AsciiMapBuilder.build(MapsForTesting.map3));
+        traversal.traverse();
+        Assert.assertEquals(traversal.getLetters(), "BEEFCAKE");
+        Assert.assertEquals(traversal.getPathAsCharacters(), "@---+B||E--+|E|+--F--+|C|||A--|-----K|||+--E--Ex");
+    }
+
 }

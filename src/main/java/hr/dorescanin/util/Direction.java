@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum Directions {
+public enum Direction {
     LEFT, RIGHT, UP, DOWN;
 
-    public Directions getOpposite() {
+    public Direction getOpposite() {
         switch (this) {
             case LEFT:
                 return RIGHT;
@@ -23,8 +23,8 @@ public enum Directions {
         }
     }
 
-    public List<Directions> getPerpendicular() {
-        final List<Directions> perpendicular = new ArrayList<>();
+    public List<Direction> getPerpendicular() {
+        final List<Direction> perpendicular = new ArrayList<>();
 
         switch (this) {
             case LEFT:
@@ -42,7 +42,7 @@ public enum Directions {
         }
     }
 
-    public static List<Directions> getOpposites(List<Directions> directions) {
+    public static List<Direction> getOpposites(List<Direction> directions) {
         return Arrays.stream(values()).filter(t -> !directions.contains(t)).collect(Collectors.toList());
     }
 }
