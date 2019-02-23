@@ -30,6 +30,7 @@ class AsciiMapTraversal {
     private Direction forbidden, continuation;
 
     private final Pattern uppercaseLetters = Pattern.compile("[A-Z]");
+    private boolean isAlreadyTraversed = false;
 
     AsciiMapTraversal(AsciiMap map) {
         final AsciiMapValidator validator = new AsciiMapValidator(map);
@@ -42,7 +43,14 @@ class AsciiMapTraversal {
         navigator = new AsciiMapNavigator(map);
     }
 
+
     void traverse() {
+
+        if (isAlreadyTraversed) {
+            throw new IllegalStateException("Map traversal can be used only once per class");
+        }
+
+        isAlreadyTraversed = true;
 
         for (Direction d : values()) {
             final char nextChar = peek(d);
